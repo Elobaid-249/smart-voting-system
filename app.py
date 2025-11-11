@@ -3,6 +3,7 @@ from flask_cors import CORS
 import random
 from datetime import datetime, timedelta
 import hashlib
+import os
 
 app = Flask(__name__)
 app.secret_key = 'smart_voting_system_secret_key_2023'
@@ -153,13 +154,13 @@ def get_results():
 def get_stats():
     total_votes = votes_db['total_votes']
     fraudulent_votes = votes_db['fraudulent_votes']
-    voter_turnout = min(100, round((total_votes / 1000) * 100))  # Assuming 1000 voters
+    voter_turnout = min(100, round((total_votes / 1000) * 100))
     
     return jsonify({
         'total_votes': total_votes,
         'fraudulent_votes': fraudulent_votes,
         'voter_turnout': voter_turnout,
-        'avg_voting_time': 6.7  # Fixed demo value
+        'avg_voting_time': 6.7
     })
 
 @app.route('/api/user-status')
@@ -180,4 +181,6 @@ if __name__ == '__main__':
     print("📊 Demo data loaded")
     print("🔒 Fraud detection: Rule-based (Active)")
     print("🌐 Server starting on http://localhost:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
